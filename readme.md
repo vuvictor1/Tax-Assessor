@@ -4,3 +4,9 @@ Tax assessment program that demonstrates array management. Takes in a float of a
 ```
 Run Bash File: sh tax.sh
 ```
+
+Changelog:
+3/29/2022 Update 1
+- Applied minor fixes as suggested by Professor Holliday regarding management of array elements.
+- Expanded the cell size to 16, allowing for more user input and preventing negative numbers.
+- Implemented alternate invalid input handling, program ignores bad input.  

@@ -31,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 
-extern "C" double tax(); // includes tax as external function
+extern "C" double tax();       // includes tax as external function
 extern "C" double get_value(); // includes get_value as function
 
 #define BUF_LEN 256
@@ -40,7 +40,7 @@ int main() {
 
   std::cout << "\nWelcome to the Orange County Property Assessment Office on ";
 
-  // time checker
+  // time updater
   char size[BUF_LEN] = {0};
 
   time_t current_time = time(NULL);
@@ -62,12 +62,12 @@ int main() {
   if (value != -1) { // Check if float has been verified
 
     std::cout << "\nThe Assessor’s Office received this number " << std::fixed
-              << std::setprecision(4) << value << " and will simply keep it. ";
+              << std::setprecision(2) << value << " and will simply keep it. ";
   } else {
-std::cout << "The main driver received this number 0.0 and will "
-"simply keep it. "
-<< std::endl;
-}
+    std::cout << "The main driver received this number 0.0 and will "
+                 "simply keep it. "
+              << std::endl;
+  }
 
   std::cout << std::endl;
   std::cout << "Next an integer 0 will be sent to the operating system as a "

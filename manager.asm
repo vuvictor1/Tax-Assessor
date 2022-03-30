@@ -35,7 +35,7 @@ extern get_value
 extern sum_values
 
 INPUT_LEN equ 256 ; Max bytes of name, title, response
-cells equ 5
+cells equ 16 ; hold max btyes for input
 
 global tax ; Giving the function global scope
 
@@ -52,8 +52,6 @@ sum_print db 10, "The sum of assessed values is $%.2lf", 10, 0
 mean_print db "The mean assessed value is $%.4lf.", 10, 0
 mean_return db 10, "The mean will now be returned to the caller function.", 10, 0
 leave_text db "We enjoy serving everyone who is a %s.", 0
-
-
 
 segment .bss ; Indicates values that require user input
 
@@ -133,51 +131,50 @@ mov rax, 0
 mov rdi, float_prompt
 call printf
 
-; Call function and passes array to function
+; Call function that receives property values from user and receives an array
+; passed in from the caller function
 push qword 0
 mov rax, 0
 mov rdi, plywood ; move array into rdi
 mov rsi, cells ; cells represent array size
 call get_value
-mov r11, rax ; move size
+mov r14, rax ; save the size of the array
 pop rax
 
-; If r11 is 0 there is no array therefore jump
-cmp r11, 0
+; If r14 is 0, there is no array to show
+cmp r14, 0
 je no_array
 
 ; Show values in an array.
 mov rax, 0
 mov rdi, plywood
-mov rsi, r11
+mov rsi, r14
 call show_property_values
 
 no_array:
 mov rax, 0
 mov rdi, plywood ; Move array into rdi
-mov rsi, cells ; Move number of elements in array
-call sum_values ; Function call to sum array
+mov rsi,r14      ; Move number of elements in array
+call sum_values  ; Function call to sum array
+movsd xmm15, xmm0  ; Save a copy of the returned value in xmm15
 
 ;print out sum, 0 if there is no array
 mov rax, 1
 mov rdi, sum_print
-movsd xmm0, xmm13
+movsd xmm0, xmm15
 call printf
 
 ; Mean calculator
-xorpd xmm12, xmm12 ; clears space in xmm12
-mov rax, cells ; move # of elemnts into rax
-cvtsi2sd xmm12, rax ; convert xmm12 to a float to divide
-divsd xmm13, xmm12 ; divide
+xorpd xmm12, xmm12  ; clears space in xmm12
+cvtsi2sd xmm12,r14  ; convert number of elements from integer to IEEE754
+divsd xmm13, xmm12  ; divide sum of values by number of elements
+; mean is now safely stored in xmm13
 
 ; print out the mean
 mov rax, 1
 mov rdi, mean_print
 movsd xmm0, xmm13
 call printf
-
-; store mean into xmm11
-movsd xmm11, xmm13
 
 ; text stating mean will be returned
 mov rax, 0
@@ -190,8 +187,8 @@ mov rdi, leave_text
 mov rsi, title
 call printf
 
-; sends xmm11 to xmm0 for the caller
-movsd xmm0, xmm11
+; copy the mean to an appropriate register for sending back
+movsd xmm0, xmm13
 
 ; Backs up 15 pushes and pop, required for assembly
 popf

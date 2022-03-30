@@ -27,11 +27,14 @@
 
 #include <stdio.h>
 
-extern void show_property_values(double array[], long size); // takes in the array and the size
+extern void show_property_values(double array[],
+                                 long size); // takes in the array and the size
 
 void show_property_values(double array[], long size) {
-  printf("\nThank you. Here are the assessed property values in this district.\n\n");
-  for (long i = 0; i < size; i++) { // iterates the array to output every element
+  printf("\nThank you. Here are the assessed property values in this "
+         "district.\n\n");
+  for (long i = 0; i < size;
+       i++) { // iterates the array to output every element
     printf("%.2lf\n", array[i]);
   }
 

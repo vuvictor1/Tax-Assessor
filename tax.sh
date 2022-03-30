@@ -17,7 +17,7 @@
 #; To run program, type in terminal: "sh tax.sh"                                               *
 #*********************************************************************************************
 
-#Removes old files when we create a new compilation
+#Removes old files when creating a new compilation
 rm *.o
 rm *.out
 

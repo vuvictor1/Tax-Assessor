@@ -32,7 +32,6 @@ global get_value
 
 section .data
 
-;error db 10, "Thank you. The data input set was corrupted. Please run this program again.", 10, 0
 string_format db "%s", 0
 new_format db "%ld", 0
 
@@ -97,20 +96,15 @@ je exit; If # of elements = capacity then finish loop
 jmp input_loop ; Restarts loop until user input is done
 
 ; jumps here if input is bad
-invalid_input: ; Using the alternative method to check for error.
-; print out the error message
-;mov rax, 0
-;mov rdi, error
-;call printf
+invalid_input: ;Using the alternative method to check for error.
 
-jmp input_loop ; If error is found simply discard and restart loop
+jmp input_loop ; If there is an error then restart
 
 end_of_loop:
 
 mov rax, r13 ; Copy number of elements to rax.
 
 exit:
-
 
 pop rbx
 pop r15

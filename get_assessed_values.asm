@@ -59,16 +59,16 @@ push r15
 push rbx
 ; -------------------------------------------
 
-mov qword r15, rdi ; Save address of array to r15.
-mov qword r14, rsi ; Max elements in array.
-mov qword r13, 0 ; Set array counter to 0
+mov r15, rdi ; Save address of array to r15.
+mov r14, rsi ; Max elements in array.
+mov r13, 0 ; Set array counter to 0
 
 input_loop:
 
 ; Take user input as a string.
-mov qword rdi, string_format
-mov qword rsi, rsp ; Points to where scanf outputs.
-mov qword rax, 0
+mov rdi, string_format
+mov rsi, rsp ; Points to where scanf outputs.
+mov rax, 0
 call scanf
 
 ; Check for controlD which is -1
@@ -76,14 +76,14 @@ cdqe
 cmp rax, -1
 je end_of_loop ; jump to end_of_loop.
 
-mov qword rax, 0
-mov qword rdi, rsp
+mov rax, 0
+mov rdi, rsp
 call isfloat ; Check if float is valid
 cmp rax, 0
 je invalid_input
 
-mov qword rax, 1
-mov qword rdi, rsp
+mov rax, 1
+mov rdi, rsp
 call atof ; Call atof to convert string back to float
 
 movsd [r15+8*r13], xmm0; Copy user input into array at r13.

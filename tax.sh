@@ -14,7 +14,7 @@
 #; License v3 is available here:  <https://www.gnu.org/licenses/>.                           *
 #;********************************************************************************************
 #; Programmed in Ubuntu-based Linux Platform.                                                *
-#; To run program, type in terminal: "sh tax.sh"                                               *
+#; To run program, type in terminal: "sh tax.sh"                                             *
 #*********************************************************************************************
 
 #Removes old files when creating a new compilation

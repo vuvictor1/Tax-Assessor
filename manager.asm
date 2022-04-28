@@ -1,13 +1,11 @@
 ;********************************************************************************************
 ; Author Information:                                                                       *
-; Name:         Victor V. Vu                                                                *
-; Email:        vuvictor@csu.fullerton.edu                                                  *
-; Section:      Cpsc 240-07
+; Name: Victor V. Vu                                                                        *
+; Email: vuvictor@csu.fullerton.edu                                                         *
+; Section: Cpsc 240-07                                                                      *
 ;                                                                                           *
 ; Program Information:                                                                      *
 ; Program Name: Tax Assessor                                                                *
-; Files: assessor.cpp, get_assessed_values.asm, isfloat.c, manager.asm,                     *
-; show_property_values.c, and sum_values.asm                                                *
 ; This File: manager.asm                                                                    *
 ; Description: Called by assessor which calls for get input, show value, and sum value      *
 ;********************************************************************************************

@@ -1,13 +1,11 @@
 ;********************************************************************************************
 ; Author Information:                                                                       *
-; Name:         Victor V. Vu                                                                *
-; Email:        vuvictor@csu.fullerton.edu                                                  *
+; Name: Victor V. Vu                                                                        *
+; Email: vuvictor@csu.fullerton.edu                                                         *
 ; Section: Cpsc 240-07                                                                      *
 ;                                                                                           *
 ; Program Information:                                                                      *
 ; Program Name: Tax Assessor                                                                *
-; Files: assessor.cpp, get_assessed_values.asm, isfloat.c, manager.asm,                     *
-; show_property_values.c, and sum_values.asm                                                *
 ; This File: sum_values.asm                                                                 *
 ; Description: Once array is displayed, function is called to sum the array                 *
 ;********************************************************************************************

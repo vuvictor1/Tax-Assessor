@@ -27,7 +27,7 @@ extern isfloat
 
 global get_value
 
-section .data
+section .data ; Initialized data
 
 string_format db "%s", 0
 new_format db "%ld", 0
@@ -72,33 +72,34 @@ cdqe
 cmp rax, -1
 je end_of_loop ; jump to end_of_loop.
 
+; Check if float is valid
 mov rax, 0
 mov rdi, rsp
-call isfloat ; Check if float is valid
+call isfloat 
 cmp rax, 0
 je invalid_input
 
+; Atof to convert string to float
 mov rax, 1
 mov rdi, rsp
-call atof ; Call atof to convert string back to float
+call atof 
 
 movsd [r15+8*r13], xmm0; Copy user input into array at r13.
 inc r13 ; Increments counter by 1 at r13.
 
 ; Check for max array capacity
-cmp r13, r14 ; Compare # of elements (r13) to capacity (r14)
-je exit; If # of elements = capacity then finish loop
+cmp r13, r14 ; compare # of elements (r13) to capacity (r14)
+je exit; if # of elements = capacity then finish loop
 
 jmp input_loop ; Restarts loop until user input is done
 
-; jumps here if input is bad
-invalid_input: ;Using the alternative method to check for error.
-
-jmp input_loop ; If there is an error then restart
+; Jumps here if input is bad
+invalid_input: ; using the alternative method to check for error.
+jmp input_loop ; if there is an error then restart
 
 end_of_loop:
 
-mov rax, r13 ; Copy number of elements to rax.
+mov rax, r13 ; copy number of elements to rax.
 
 exit:
 
@@ -117,4 +118,4 @@ pop rsi
 pop rdi
 pop rbp
 
-ret
+ret ; send to caller

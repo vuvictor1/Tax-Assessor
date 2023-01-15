@@ -56,12 +56,13 @@ xorpd xmm15, xmm15
 xorpd xmm14, xmm14
 
 mov r15, rdi ; copy array
-mov r14, rsi ; Copy number of elements into r14
+mov r14, rsi ; copy # of elements into r14
 mov rbx, 0 ; counter
 
+; Check if rbx is = to r14, then jump
 start_loop:
-cmp rbx, r14 ; check if rbx is = to r14
-jge stop ; if it is jump to stop loop
+cmp rbx, r14 
+jge stop 
 
 movsd xmm15, qword[r15+8*rbx] ; add into array if counter is not equal to size
 addsd xmm14, xmm15 ; store result in xmm14
@@ -69,9 +70,10 @@ addsd xmm14, xmm15 ; store result in xmm14
 inc rbx ; increment rbx after each iteration
 jmp start_loop ; restart loop
 
+; Save xmm13 in 14 then return as sum in xmm0 
 stop:
-movsd xmm13, xmm14 ; send xmm14 to xmm13 as a saved copy
-movsd xmm0, xmm14 ; send back sum to caller
+movsd xmm13, xmm14 
+movsd xmm0, xmm14 
 
 ; Restore registers
 popf

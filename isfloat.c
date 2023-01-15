@@ -33,9 +33,10 @@ int isfloat(char user_input[]) {
   {
     ++current_index;
   }
-
+  
+  // Search for decimal
   while (user_input[current_index] != '\0' && result) {
-    if ((user_input[current_index] == '.') && !decimal_found) // search for decimal
+    if ((user_input[current_index] == '.') && !decimal_found) 
     {
       decimal_found = 1;
     } else {
@@ -46,5 +47,5 @@ int isfloat(char user_input[]) {
     }
     ++current_index;
   }
-  return (result && decimal_found);
+  return (result && decimal_found); // results
 }

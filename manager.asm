@@ -185,7 +185,7 @@ mov rax, 0
 mov rdi, mean_return
 call printf
 
-; Text that greets the user farewell before exiting
+; Text greeting user farewell before exiting
 mov rax, 0
 mov rdi, leave_text
 mov rsi, title

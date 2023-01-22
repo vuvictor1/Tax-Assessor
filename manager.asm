@@ -4,10 +4,10 @@
 ; Email: vuvictor@csu.fullerton.edu                                                         *
 ;                                                                                           *
 ; Program Information:                                                                      *
-; Program Name: Tax Assessor                                                                *
+; Program Name: Harmonic Series                                                             *
 ; This File: manager.asm                                                                    *
-; Description: Called by assessor which calls for get input, show value, and sum value      *
-;                                                                                           *
+; Description: Called by harmonic to ask prompt and then calls on compute_sum for sum       *
+;********************************************************************************************
 ; Copyright (C) 2022 Victor V. Vu                                                           *
 ; This program is free software: you can redistribute it and/or modify it under the terms   *
 ; of the GNU General Public License version 3 as published by the Free Software Foundation. *
@@ -15,187 +15,198 @@
 ; without even the implied Warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. *
 ; See the GNU General Public License for more details. A copy of the GNU General Public     *
 ; License v3 is available here:  <https://www.gnu.org/licenses/>.                           *
-;                                                                                           *
+;********************************************************************************************
 ; Programmed in Ubuntu-based Linux Platform.                                                *
 ; To run program, type in terminal: "sh r.sh"                                               *
 ;********************************************************************************************
-
-; Required externals
 extern printf
 extern scanf
-extern fgets
-extern stdin
-extern strlen 
-extern atof ; converts string to float
-extern isfloat 
-extern show_property_values
-extern get_value
-extern sum_values
 
-; Set maximum bytes for variables
-INPUT_LEN equ 256 ; max bytes of name, title, response
-cells equ 16 ; hold max btyes for input
+extern compute_sum
+extern clock_check
 
-global tax ; Giving the function global scope
+global manager ; Function declared with global scope
 
 segment .data ; Indicates initialized data
 
-; Format specifiers
-string_format db "%s", 0 
+item_prompt db "How many terms do you want to include? ", 0
 int_format db "%ld", 0
-array_format db 10, 10, "The sum of assessed values is %ld", 0
-
-; Text variables
-name_prompt db 10, "Please enter your name and press enter: ", 0
-title_prompt db "Please enter your title: ", 0
-name_output db "Thank you %s.", 10, 10, 0
-float_prompt db "Next we will collect the property values in your assessment district. Between each value enter while space. When finished entering values press <enter> followed by control+D.", 10, 10, 0
-sum_print db 10, "The sum of assessed values is $%.2lf", 10, 0
-mean_print db "The mean assessed value is $%.4lf.", 10, 0
-mean_return db 10, "The mean will now be returned to the caller function.", 10, 0
-leave_text db "We enjoy serving everyone who is a %s.", 0
+float_format db "%lf", 0
+start_time db "Thank you. The time is now %lu tics.", 10
+            db "The computation has begun.", 10, 10, 0
+end_time db 10, "The time is now %lu tics.", 10, 10, 0
+elapsed_time db "The elapsed time is %.0lf tics", 10, 10, 0
+cpu_clock db "An Intel processor was detected. Your processor frequency is: %.2lf GHz", 10, 10, 0
+amd_clock db "An Amd processor was detected. Please enter your processor frequency in GHz: ", 0
+seconds db "The elapsed time equals %.11lf seconds", 10, 10, 0
+exit db "The sum will be returned to the caller module.", 10, 0
 
 segment .bss ; Indicates values that require user input
 
-; Reserve bytes
-align 16
-title: resb INPUT_LEN
-name: resb INPUT_LEN 
-user_input: resb 32
-plywood resq cells
-
 segment .text ; Stores executable code
 
-tax: ; = assembly equivalent of int main() {} 
+manager: ; program will enter assembly = int main() {}
 
-; Required 15 pushes and pops for asssembly to run
-push       rbp
-
-mov        rbp, rsp
-push       rbx
-push       rcx
-push       rdx
-push       rsi
-push       rdi
-push       r8
-push       r9
-push       r10
-push       r11
-push       r12
-push       r13
-push       r14
-push       r15
+; Backs up 15 pushes, required for assembly
+push rbp
+mov rbp, rsp
+push rbx
+push rcx
+push rdx
+push rdi
+push rsi
+push r8
+push r9
+push r10
+push r11
+push r12
+push r13
+push r14
+push r15
 pushf
 
-; Prompt asking for name
+; ask user for number of items
 mov rax, 0
-mov rdi, name_prompt
+mov rdi, item_prompt
 call printf
 
-; fgets block to take input
-mov rax, 0
-mov rdi, name
-mov rsi, INPUT_LEN ; read 256 btyes
-mov rdx, [stdin] ; move data from stdin to rdx
-call fgets ; call fgets function
-
-; Take 2nd part of name
-mov rax, 0
-mov rdi, name
-call strlen ; call strlen which returns length of string up to \0
-sub rax, 1 ; subtract 1 from rax to find \n
-mov byte [name + rax], 0 ; replace byte where \n is with \0
-
-; Asks for title input
-mov rax, 0
-mov rdi, title_prompt
-call printf
-
-; fgets takes user input
-mov rax, 0
-mov rdi, title
-mov rsi, INPUT_LEN ; read 256 btyes
-mov rdx, [stdin] ; move data from stdin to rdx
-call fgets ; call fgets function
-
-; Take 2nd part of title
-mov rax, 0
-mov rdi, title
-call strlen ; call strlen which returns length of string up to \0
-sub rax, 1 ; subtract 1 from rax to find \n
-mov byte [title + rax], 0 ; replace byte where \n is with \0
-
-; Print out the name
-mov rax, 0
-mov rdi, name_output
-mov rsi, name
-call printf
-
-; Prompt asking for floats
-mov rax, 0
-mov rdi, float_prompt
-call printf
-
-; Receives property values from user & passed array 
+; take in user input
+push qword 0
 push qword 0
 mov rax, 0
-mov rdi, plywood ; move array into rdi
-mov rsi, cells ; cells represent array size
-call get_value
-mov r14, rax ; save the size of the array
+mov rdi, int_format
+mov rsi, rsp
+call scanf
+pop r12 ; pop input into r12
 pop rax
 
-; If r14 is 0, there is no array
-cmp r14, 0
-je no_array
+; Start Tick Calulator
+;---------------------
 
-; Show values in an array.
+; zero out rax and rdx to use
 mov rax, 0
-mov rdi, plywood
+mov rdx, 0
+
+cpuid ; stop system process
+rdtsc ; read cpu info
+
+shl rdx, 32 ; shift bits in rdx 32 bits left
+add rdx, rax ; add right half of cpu info
+mov r14, rdx ; store tics into r14
+
+; print out start time tics elapsed
+mov rax, 0
+mov rdi, start_time
 mov rsi, r14
-call show_property_values
+call printf
 
-no_array:
+; call compute sum
 mov rax, 0
-mov rdi, plywood ; move array into rdi
-mov rsi,r14      ; move number of elements in array
-call sum_values  ; function call to sum array
-movsd xmm15, xmm0  ; save a copy of the returned value in xmm15
+mov rdi, r12
+call compute_sum
+movsd xmm10, xmm12
 
-; Print out sum of 0 if no array
+; compare results if Intel
+movq r10, xmm10
+cmp r10, 0 ; if 10 is bigger than 0 than intel cpu
+jge print_out
+; End Tick Calulator
+;---------------------
+
+cpuid ; stop system processes
+rdtsc ; read cpu info
+
+shl rdx, 32 ; shift bits in rdx 32 bits left
+add rdx, rax ; add right half of cpu info
+mov r13, rdx ; store tics into r13
+
+; print out end tics
+mov rax, 0
+mov rdi, end_time
+mov rsi, r13
+call printf
+
+; Elapsed Time Calulator
+;---------------------
+
+; convert tics to float numbers
+cvtsi2sd xmm15, r14 ; start time
+cvtsi2sd xmm14, r13 ; end time
+
+subsd xmm14, xmm15 ; subtract end with start tic
+movsd xmm15, xmm14 ; save value intto xmm15
+movsd xmm12, xmm15 ; copy elapsed time into xmm12
+
+; print out elapsed tics
 mov rax, 1
-mov rdi, sum_print
+mov rdi, elapsed_time
 movsd xmm0, xmm15
 call printf
 
-; Calculate mean
-xorpd xmm12, xmm12  ; clears space in xmm12
-cvtsi2sd xmm12,r14  ; convert number of elements from integer to IEEE754
-divsd xmm13, xmm12  ; divide sum of values by number of elements
-; Mean is now safely stored in xmm13
+;--------------------
 
-; Print out the mean
+; get cpu clock speed
 mov rax, 1
-mov rdi, mean_print
+call clock_check
+movsd xmm13, xmm0
+
+; check for amd cpu
+mov rax, 0
+cvtsi2sd xmm9, rax
+ucomisd xmm13, xmm9
+jg print_out
+
+; ask for amd clock
+mov rax, 0
+mov rdi, amd_clock
+call printf
+
+; take in amd clock
+mov rax, 1
+mov rdi, float_format
+mov rsi, rsp
+call scanf
+movsd xmm8, [rsp]
+movsd xmm13, xmm8
+jmp amd_exit
+
+print_out:
+; print out cpu clock speed
+mov rax, 1
+mov rdi, cpu_clock
 movsd xmm0, xmm13
 call printf
 
-; Text stating mean will be returned
-mov rax, 0
-mov rdi, mean_return
+; Nanoseconds and seconds conversation
+;-------------------------------------
+amd_exit:
+;convert to nanoseconds
+divsd xmm12, xmm13 ; take elapsed tic and divde by clock speed
+
+; move 1 billion hex into xmm11
+mov rax, 0x41cdcd6500000000
+push rax
+movsd xmm11, [rsp] ; dereference top of stack to move value
+pop rax
+
+; divide nanoseconds by 1 billion for secs
+divsd xmm12, xmm11
+
+; print out seconds
+mov rax, 1
+mov rdi, seconds
+movsd xmm0, xmm12
 call printf
 
-; Text greeting user farewell before exiting
+; return sum text before leaving program
 mov rax, 0
-mov rdi, leave_text
-mov rsi, title
+mov rdi, exit
 call printf
 
-movsd xmm0, xmm13 ; copy mean to free register for return
+movsd xmm0, xmm10 ; send seconds
 
-; Backs up 15 pushes and pop, required for assembly
+; Backs up 15 pops, required for assembly
 popf
-pop rbx
 pop r15
 pop r14
 pop r13
@@ -204,10 +215,11 @@ pop r11
 pop r10
 pop r9
 pop r8
-pop rcx
-pop rdx
 pop rsi
 pop rdi
+pop rdx
+pop rcx
+pop rbx
 pop rbp
 
-ret ; return statemnt
+ret ; return value to caller

@@ -156,6 +156,7 @@ mov rsi, r14
 call show_property_values
 
 no_array:
+; Return no array
 mov rax, 0
 mov rdi, plywood ; move array into rdi
 mov rsi,r14      ; move number of elements in array

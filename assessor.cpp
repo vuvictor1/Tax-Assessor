@@ -43,7 +43,7 @@ int main() {
   strftime(size, BUF_LEN, "%B %-d, %G", ptm);
   puts(size);
   // -----------
-  std:cout << ".";
+  std::cout << ".";
   
 
   std::cout << "For assistance contact Victor Vu at vuvictor@premier.com" << std::endl;

@@ -40,11 +40,9 @@ int main() {
   time_t current_time = time(NULL);
   struct tm *ptm = localtime(&current_time);
   memset(size, 0, BUF_LEN);
-  strftime(size, BUF_LEN, "%B %-d, %G", ptm);
+  strftime(size, BUF_LEN, "%B %-d, %G, .", ptm);
   puts(size);
   // -----------
-  std::cout << ".";
-  
 
   std::cout << "For assistance contact Victor Vu at vuvictor@premier.com" << std::endl;
 

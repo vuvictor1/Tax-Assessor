@@ -49,7 +49,7 @@ array_format db 10, 10, "The sum of assessed values is %ld", 0
 name_prompt db 10, "Please enter your name and press enter: ", 0
 title_prompt db "Please enter your title: ", 0
 name_output db "Thank you %s.", 10, 10, 0
-float_prompt db "Next we will collect the property values in your assessment district. Between each value enter while space. When finished entering values press <enter> followed by control+D.", 10, 10, 0
+float_prompt db "Next we will collect the property values in your assessment district. Between each value(floats) enter white space. When finished entering values press <enter> followed by control+D.", 10, 10, 0
 sum_print db 10, "The sum of assessed values is $%.2lf", 10, 0
 mean_print db "The mean assessed value is $%.4lf.", 10, 0
 mean_return db 10, "The mean will now be returned to the caller function.", 10, 0

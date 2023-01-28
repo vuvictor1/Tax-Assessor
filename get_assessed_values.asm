@@ -6,7 +6,7 @@
 ; Program Information:                                                                      *
 ; Program Name: Tax Assessor                                                                *
 ; This File: get_assessed_values.asm                                                        *
-; Description: Called by manager to get user input and send it back.                        *
+; Description: Called by manager to recieve user input and return it.                       *
 ;                                                                                           *
 ; Copyright (C) 2022 Victor V. Vu                                                           *
 ; This program is free software: you can redistribute it and/or modify it under the terms   * 
@@ -19,13 +19,13 @@
 ; Programmed in Ubuntu-based Linux Platform.                                                *
 ; To run program, type in terminal: "sh r.sh"                                               *
 ;********************************************************************************************
-
+; Externals
 extern printf
 extern scanf
 extern atof
 extern isfloat
 
-global get_value
+global get_value ; Set function global
 
 section .data ; Initialized data
 

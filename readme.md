@@ -1,5 +1,5 @@
 # Tax-Assessor
-Tax assessment for the sum and mean of property values. Takes in a float of arrays to solve for sum and mean. Features a main file that calls on other functions when necessary to perform operations. Requires user input for the array. Tribrid program written in x86 Assembly, C++, and C. Runs using a bash script file.
+Tax assessment for the sum and mean of property values. Takes in a float of arrays to solve for sum and mean. Additionally, features time updater that retrieves local date. Requires user input for the array. Tribrid program written in x86 Assembly, C++, and C. Runs using a bash script file.
 
 ***Run Instructions***
 ```

@@ -30,12 +30,12 @@
 extern "C" double tax();       
 extern "C" double get_value(); 
 
-#define BUF_LEN 256
+#define BUF_LEN 256 // reserved buffer for date retriever 
 
 int main() {
   std::cout << "\nWelcome to the Orange County Property Assessment Office on ";
 
-  // Time updater
+  // Retrieve local date
   char size[BUF_LEN] = {0};
   time_t current_time = time(NULL);
   struct tm *ptm = localtime(&current_time);
@@ -43,10 +43,12 @@ int main() {
   strftime(size, BUF_LEN, "%B %-d, %G", ptm);
   puts(size);
   // -----------
+  std:cout << ".";
+  
 
   std::cout << "For assistance contact Victor Vu at vuvictor@premier.com" << std::endl;
 
-  double value = tax(); // Data is being returned from the assembly file
+  double value = tax(); // function called from assembly file
 
   std::cout << std::endl;
 
@@ -54,8 +56,7 @@ int main() {
     std::cout << "\nThe Assessor’s Office received this number " << std::fixed
               << std::setprecision(2) << value << " and will simply keep it. ";
   } else {
-    std::cout << "The main driver received this number 0.0 and will simply keep it. " << std::endl;
-  }
+    std::cout << "The main driver received this number 0.0 and will simply keep it. " << std::endl; }
 
   std::cout << std::endl;
   std::cout << "Next an integer 0 will be sent to the operating system as a signal of successful completion."

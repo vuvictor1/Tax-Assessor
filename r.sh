@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author: Victor V. Vu                                                                      
-# Descrption: BASH compilation file                                                         
+# Description: BASH compilation file                                                         
                                                                                            
 # Copyright (C) 2022 Victor V. Vu                                                           
 # This program is free software: you can redistribute it and/or modify it under the terms   
